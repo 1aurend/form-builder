@@ -46,9 +46,10 @@ export default function ResourceForm() {
   return (
     <>
       <h1>Resource Collector</h1>
-      <p>I'm an un-styled prototype of a forking form.</p>
+      <p>(I'm an un-styled prototype of a forking form.)</p>
       <div style={{maxWidth:'30%'}}>
         <h4>Who are you?</h4>
+        <p>(I'm an async select form field. Start typing and I'll fetch options from Airtable for you.)</p>
         <AsyncSelect cacheOptions={true} defaultOptions={peopleOptions} loadOptions={loadPeople} />
       </div>
       <div style={{maxWidth:'30%'}}>
