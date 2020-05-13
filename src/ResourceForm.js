@@ -1,13 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Select from 'react-select'
-import AsyncSelect from 'react-select/async'
-import axios from 'axios'
+import AsyncCreatableSelect from 'react-select/async-creatable'
+import Modal, { ModalProvider } from 'styled-react-modal'
+import { LLPeople } from './Data'
+import PeopleForm from './PeopleForm'
+
+
+const PeopleModal = Modal.styled`
+  width: 75vmin;
+  height: 75vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  z-index: 30;
+`
 
 
 export default function ResourceForm() {
-  const [people, setPeople] = useState(null)
+  const llPeople = useContext(LLPeople)
+  const [peopleOptions, setPeopleOptions] = useState(null)
+  const [showModal, setShowModal] = useState(false)
+  const [createName, setCreateName] = useState(null)
 
-  const peopleOptions = [
+  const defaultPeopleOptions = [
     {value: 'lauren', label: 'lauren'},
     {value: 'katie', label: 'katie'}
   ]
@@ -23,35 +40,43 @@ export default function ResourceForm() {
   ]
 
   const loadPeople = async (inputValue) => {
-    const reqConfig = {
-      method: 'GET',
-      url: 'http://localhost:8080/people/list',
-      responseType: 'json'
+    if (!peopleOptions) {
+      const formatted = llPeople.map(name => {
+        return {value: name, label: name}
+      })
+      setPeopleOptions(formatted)
+      return formatted.filter(option => option.label.includes(inputValue))
     }
-    try {
-      if (!people) {
-        const result = await axios(reqConfig)
-        const peopleOptions = result.data.people.map(name => {
-          return {value: name, label: name}
-        })
-        setPeople(peopleOptions)
-        return peopleOptions.filter(option => option.label.includes(inputValue))
-      }
-      return people.filter(option => option.label.includes(inputValue))
-    } catch (err) {
-      alert(err)
-    }
+    return peopleOptions.filter(option => option.label.includes(inputValue))
+  }
+
+  const showPeopleForm = (inputValue) => {
+    setCreateName(inputValue)
+    setShowModal(true)
   }
 
   return (
     <>
       <h1>Resource Collector</h1>
       <p>(I'm an un-styled prototype of a forking form.)</p>
-      <div style={{maxWidth:'30%'}}>
-        <h4>Who are you?</h4>
-        <p>(I'm an async select form field. Start typing and I'll fetch options from Airtable for you.)</p>
-        <AsyncSelect cacheOptions={true} defaultOptions={peopleOptions} loadOptions={loadPeople} />
-      </div>
+      <ModalProvider>
+        <div style={{maxWidth:'30%'}}>
+          <h4>Who are you?</h4>
+          <p>(I'm an async select form field. Start typing and I'll find matchng options for you.)</p>
+          <AsyncCreatableSelect
+            cacheOptions
+            defaultOptions={defaultPeopleOptions}
+            loadOptions={loadPeople}
+            onCreateOption={showPeopleForm}
+            />
+          <PeopleModal
+            isOpen={showModal}
+            onBackgroundClick={() => setShowModal(false)}
+            >
+            <PeopleForm name={createName} />
+          </PeopleModal>
+        </div>
+      </ModalProvider>
       <div style={{maxWidth:'30%'}}>
         <h4>Title of your resource</h4>
         <input type='text'/>
