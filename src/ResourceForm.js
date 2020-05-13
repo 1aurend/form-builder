@@ -68,6 +68,7 @@ export default function ResourceForm() {
             defaultOptions={defaultPeopleOptions}
             loadOptions={loadPeople}
             onCreateOption={showPeopleForm}
+            value={createName && {name: createName, label: createName}}
             />
           <PeopleModal
             isOpen={showModal}
