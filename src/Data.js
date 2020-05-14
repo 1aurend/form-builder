@@ -4,9 +4,14 @@ import App from './App'
 
 
 export const LLPeople = React.createContext()
+export const ResourceTypes = React.createContext()
+export const ToolsMeds = React.createContext()
 
+// TODO: deal with data load errors here
 export default function Data() {
-  const [peopleList, setPeopleList] = useState()
+  const [peopleList, setPeopleList] = useState(['test', 'test2', 'test3'])
+  const [types, setTypes] = useState(['test', 'test2'])
+  const [toolsMedsList, setToolsMedsList] = useState('test', 'test2', 'test3')
 
   useEffect(() => {
     const loadPeople = async () => {
@@ -25,9 +30,47 @@ export default function Data() {
     loadPeople()
   }, [])
 
+  useEffect(() => {
+    const loadResourceTypes = async () => {
+      const reqConfig = {
+        method: 'GET',
+        url: 'http://localhost:8080/tags/resourcetypes',
+        responseType: 'json'
+      }
+      try {
+        const result = await axios(reqConfig)
+        setToolsMedsList(result.data.types)
+      } catch (err) {
+        alert(err)
+      }
+    }
+    loadResourceTypes()
+  }, [])
+
+  useEffect(() => {
+    const loadToolsMeds = async () => {
+      const reqConfig = {
+        method: 'GET',
+        url: 'http://localhost:8080/toolsmeds/list',
+        responseType: 'json'
+      }
+      try {
+        const result = await axios(reqConfig)
+        setTypes(result.data.list)
+      } catch (err) {
+        alert(err)
+      }
+    }
+    loadToolsMeds()
+  }, [])
+
   return (
     <LLPeople.Provider value={peopleList}>
-      <App />
+      <ResourceTypes.Provider value={types}>
+        <ToolsMeds.Provider value={toolsMedsList}>
+          <App />
+        </ToolsMeds.Provider>
+      </ResourceTypes.Provider>
     </LLPeople.Provider>
   )
 

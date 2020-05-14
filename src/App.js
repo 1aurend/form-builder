@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './Home'
-import ResourceForm from './ResourceForm'
+import ResourceForm from './forms/ResourceForm'
 
 
 export default function App() {
