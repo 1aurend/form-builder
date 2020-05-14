@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 
 
-export default function PeopleForm({ name }) {
+export default function PeopleForm({ value }) {
   const [formValues, setformValues] = useState({
     first: '',
     last: '',
@@ -43,7 +43,7 @@ export default function PeopleForm({ name }) {
   }
   return (
     <>
-      <h1>Hello {name}!</h1>
+      <h1>Hello {value}!</h1>
       <p>Sorry we can't find you in our airtable. Use this form add your info.</p>
       <h4>first name</h4>
       <input type="text" onChange={e => setformValues({...formValues, first: e.target.value})} />
