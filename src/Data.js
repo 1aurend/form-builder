@@ -11,7 +11,7 @@ export const ToolsMeds = React.createContext()
 export default function Data() {
   const [peopleList, setPeopleList] = useState(['test', 'test2', 'test3'])
   const [types, setTypes] = useState(['test', 'test2'])
-  const [toolsMedsList, setToolsMedsList] = useState('test', 'test2', 'test3')
+  const [toolsMedsList, setToolsMedsList] = useState(['test', 'test2', 'test3'])
   //
   // useEffect(() => {
   //   const loadPeople = async () => {

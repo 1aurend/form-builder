@@ -1,23 +1,26 @@
 import React, { useState } from 'react'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 import Modal, { ModalProvider } from 'styled-react-modal'
+import _ from 'lodash'
 
 
-const PeopleModal = Modal.styled`
-  width: 75vmin;
-  height: 75vmin;
+const StyledModal = Modal.styled`
+  width: 40vmin;
+  height: 20vmin;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  z-index: 30;
+  background-color: white; 
 `
 
-export default function MultiSelectAdd(props) {
-  const { value, setValue, valKey, data, text, ModalForm } = props
+export default function AsyncMultiSelectAdd(props) {
+  const { value, setValue, valKey, data, text, ModalContent } = props
+  const formattedValue = _.isString(value)? '' : value.map(item => {
+    return {value: item, label: item}
+  })
   const [options, setOptions] = useState(null)
-  const [showCheckbox, setShowCheckbox] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const defaultOptions = [
     {value: data[0], label: data[0]},
@@ -37,12 +40,14 @@ export default function MultiSelectAdd(props) {
     return options.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
   }
 
-  // const showSelector = (inputValue) => {
-  //   setValue(inputValue, valKey)
-  //   setShowCheckbox(true)
-  // }
+  const showModalSelector = (inputValue) => {
+    setValue(inputValue, valKey)
+    setShowModal(true)
+  }
   const handleChange = (inputValue) => {
-    setValue(inputValue?.value? inputValue.value : '', valKey)
+    console.log('here')
+    console.log(inputValue);
+    setValue(inputValue? inputValue.map(item => item.value) : '', valKey)
   }
 
 
@@ -54,12 +59,18 @@ export default function MultiSelectAdd(props) {
         <AsyncCreatableSelect
           isClearable
           isMulti
-          value={value && {value: value, label: value}}
+          value={formattedValue}
           defaultOptions={defaultOptions}
           loadOptions={loadOptions}
           onChange={handleChange}
-          onCreateOption={handleChange}
+          onCreateOption={showModalSelector}
           />
+        <StyledModal
+          isOpen={showModal}
+          onBackgroundClick={() => setShowModal(false)}
+          >
+          <ModalContent input={value} setShowModal={setShowModal}/>
+        </StyledModal>
       </div>
     </ModalProvider>
   )

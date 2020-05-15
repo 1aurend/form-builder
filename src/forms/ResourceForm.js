@@ -2,8 +2,9 @@ import React, { useState, useContext } from 'react'
 import Select from 'react-select'
 import StrInput from './questions/StrInput'
 import SingleSelectModal from './questions/SingleSelectModal'
-import AsyncMultiSelectAdd from './questions/MultiSelectAdd'
+import AsyncMultiSelectAdd from './questions/AsyncMultiSelectAdd'
 import PeopleForm from './PeopleForm'
+import ToolMedCheckbox from './ToolMedCheckbox'
 import { LLPeople, ToolsMeds, ResourceTypes } from '../Data'
 
 
@@ -20,6 +21,9 @@ export default function ResourceForm() {
   })
 
   const setValue = (e, key) => {
+    if (key === 'tool') {
+      setformValues({...formValues, [key]: e.target? (e.target.value === []? '' : [...formValues.tool, e.target.value]) : e})
+    }
     setformValues({...formValues, [key]: e.target? (e.target.value === ''? '' : e.target.value) : e})
   }
 
@@ -51,6 +55,7 @@ export default function ResourceForm() {
         valKey='tool'
         data={toolsMeds}
         text='Tool or Medium'
+        ModalContent={ToolMedCheckbox}
         />
       <StrInput
         title='Link to your resource'
