@@ -11,10 +11,10 @@ const StyledModal = Modal.styled`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: white; 
+  background-color: white;
 `
 
-export default function AsyncMultiSelectAdd(props) {
+export default function AsyncMultiSelectModal(props) {
   const { value, setValue, valKey, data, text, ModalContent } = props
   const formattedValue = _.isString(value)? '' : value.map(item => {
     return {value: item, label: item}

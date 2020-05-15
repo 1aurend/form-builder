@@ -14,7 +14,7 @@ const StyledModal = Modal.styled`
   z-index: 30;
 `
 
-export default function SingleSelectModal(props) {
+export default function AsyncSingleSelectModal(props) {
   const { value, setValue, valKey, data, text, ModalForm } = props
   const [options, setoptions] = useState(null)
   const [showModal, setShowModal] = useState(false)
