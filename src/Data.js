@@ -12,24 +12,24 @@ export default function Data() {
   const [peopleList, setPeopleList] = useState(['test', 'test2', 'test3'])
   const [types, setTypes] = useState(['test', 'test2'])
   const [toolsMedsList, setToolsMedsList] = useState(['test', 'test2', 'test3'])
-  //
-  // useEffect(() => {
-  //   const loadPeople = async () => {
-  //     const reqConfig = {
-  //       method: 'GET',
-  //       url: 'http://localhost:8080/people/list',
-  //       responseType: 'json'
-  //     }
-  //     try {
-  //       const result = await axios(reqConfig)
-  //       setPeopleList(result.data.people)
-  //     } catch (err) {
-  //       alert(err)
-  //     }
-  //   }
-  //   loadPeople()
-  // }, [])
-  //
+
+  useEffect(() => {
+    const loadPeople = async () => {
+      const reqConfig = {
+        method: 'GET',
+        url: 'http://localhost:8080/people/list',
+        responseType: 'json'
+      }
+      try {
+        const result = await axios(reqConfig)
+        setPeopleList(result.data.people)
+      } catch (err) {
+        alert(err)
+      }
+    }
+    loadPeople()
+  }, [])
+
   // useEffect(() => {
   //   const loadResourceTypes = async () => {
   //     const reqConfig = {

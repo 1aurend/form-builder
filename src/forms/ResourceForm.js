@@ -17,7 +17,7 @@ export default function ResourceForm() {
     who: '',
     title: '',
     type: [],
-    tool: '',
+    tool: [],
     link: ''
   })
   const [status, setStatus] = useState('open')
@@ -39,7 +39,7 @@ export default function ResourceForm() {
         method: 'POST',
         url: 'http://localhost:8080/resources/submit',
         responseType: 'json',
-        data: formValues
+        data: {...formValues, who: [formValues.who]}
       }
       try {
         const result = await axios(reqConfig)
