@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react'
-import Select from 'react-select'
+import axios from 'axios'
 import StrInput from './questions/StrInput'
-import AsyncSingleSelectModal from './questions/AsyncSingleSelectModal'
-import AsyncMultiSelectModal from './questions/AsyncMultiSelectModal'
+import AsyncSingleSelect from './questions/AsyncSingleSelect'
+import AsyncMultiSelect from './questions/AsyncMultiSelect'
+import MultiSelect from './questions/MultiSelect'
 import PeopleForm from './PeopleForm'
 import ToolMedCheckbox from './ToolMedCheckbox'
 import { LLPeople, ToolsMeds, ResourceTypes } from '../Data'
@@ -19,23 +20,45 @@ export default function ResourceForm() {
     tool: '',
     link: ''
   })
+  const [status, setStatus] = useState('open')
 
   const setValue = (e, key) => {
-    if (key === 'tool') {
-      setformValues({...formValues, [key]: e.target? (e.target.value === []? '' : [...formValues.tool, e.target.value]) : e})
+    switch (key) {
+      case 'tool':
+      case 'type':
+        setformValues({...formValues, [key]: e.target? (e.target.value === []? '' : [...formValues.tool, e.target.value]) : e})
+        return
+      default:
+        setformValues({...formValues, [key]: e.target? (e.target.value === ''? '' : e.target.value) : e})
     }
-    setformValues({...formValues, [key]: e.target? (e.target.value === ''? '' : e.target.value) : e})
   }
 
   const onSubmit = async () => {
-    //post req goes here
+    const submitResource = async () => {
+      const reqConfig = {
+        method: 'POST',
+        url: 'http://localhost:8080/resources/submit',
+        responseType: 'json',
+        data: formValues
+      }
+      try {
+        const result = await axios(reqConfig)
+        console.log(`Success! Resource ${formValues.title} created`)
+        console.log(result)
+        //add resulting record to context here?
+        setStatus('success')
+      } catch (err) {
+        alert(err)
+      }
+    }
+    submitResource()
   }
 
   return (
     <div style={{marginLeft: '5%', marginTop: '5%'}}>
       <h1>Resource Collector</h1>
       <p>(I'm an un-styled prototype of a forking form.)</p>
-      <AsyncSingleSelectModal
+      <AsyncSingleSelect
         value={formValues.who}
         setValue={setValue}
         ModalForm={PeopleForm}
@@ -48,12 +71,15 @@ export default function ResourceForm() {
         setValue={setValue}
         valKey='title'
         />
-      <div style={{maxWidth:'30%'}}>
-        <h4>Type?</h4>
-        <p>Which of the following most accurately describes your resource? Pick as many as make sense!</p>
-        <Select options={resourceTypes} isMulti={true} />
-      </div>
-      <AsyncMultiSelectModal
+      <MultiSelect
+        value={formValues.type}
+        setValue={setValue}
+        valKey='type'
+        data={resourceTypes}
+        text='Type?'
+        subText='Which of the following most accurately describes your resource? Pick as many as make sense!'
+        />
+      <AsyncMultiSelect
         value={formValues.tool}
         setValue={setValue}
         valKey='tool'
@@ -67,7 +93,10 @@ export default function ResourceForm() {
         setValue={setValue}
         valKey='link'
         />
-      <button>
+      <button
+        onClick={onSubmit}
+        style={{marginTop: '20px'}}
+        >
         Submit!
       </button>
     </div>

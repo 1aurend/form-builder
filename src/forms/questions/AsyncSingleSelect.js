@@ -14,7 +14,7 @@ const StyledModal = Modal.styled`
   z-index: 30;
 `
 
-export default function AsyncSingleSelectModal(props) {
+export default function AsyncSingleSelect(props) {
   const { value, setValue, valKey, data, text, ModalForm } = props
   const [options, setoptions] = useState(null)
   const [showModal, setShowModal] = useState(false)
@@ -59,13 +59,13 @@ export default function AsyncSingleSelectModal(props) {
           onChange={handleChange}
           onCreateOption={showModalForm}
           />
-        <StyledModal
+        {ModalForm && <StyledModal
           isOpen={showModal}
           onBackgroundClick={() => setShowModal(false)}
           >
           {/*this value prop is problemmatic for scaling...??*/}
           <ModalForm value={value} />
-        </StyledModal>
+        </StyledModal>}
       </div>
     </ModalProvider>
   )

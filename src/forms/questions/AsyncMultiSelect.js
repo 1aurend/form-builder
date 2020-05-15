@@ -14,7 +14,7 @@ const StyledModal = Modal.styled`
   background-color: white;
 `
 
-export default function AsyncMultiSelectModal(props) {
+export default function AsyncMultiSelect(props) {
   const { value, setValue, valKey, data, text, ModalContent } = props
   const formattedValue = _.isString(value)? '' : value.map(item => {
     return {value: item, label: item}
@@ -41,12 +41,10 @@ export default function AsyncMultiSelectModal(props) {
   }
 
   const showModalSelector = (inputValue) => {
-    setValue(inputValue, valKey)
+    setValue([...value, inputValue], valKey)
     setShowModal(true)
   }
   const handleChange = (inputValue) => {
-    console.log('here')
-    console.log(inputValue);
     setValue(inputValue? inputValue.map(item => item.value) : '', valKey)
   }
 
@@ -65,12 +63,12 @@ export default function AsyncMultiSelectModal(props) {
           onChange={handleChange}
           onCreateOption={showModalSelector}
           />
-        <StyledModal
+        {ModalContent && <StyledModal
           isOpen={showModal}
           onBackgroundClick={() => setShowModal(false)}
           >
           <ModalContent input={value} setShowModal={setShowModal}/>
-        </StyledModal>
+        </StyledModal>}
       </div>
     </ModalProvider>
   )
