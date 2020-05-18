@@ -20,16 +20,16 @@ export default function AsyncSingleSelect(props) {
   const [showModal, setShowModal] = useState(false)
 
   const defaultOptions = [
-    {value: data[0], label: data[0]},
-    {value: data[1], label: data[1]},
-    {value: data[2], label: data[2]}
+    {value: data[0].id, label: data[0].name},
+    {value: data[1].id, label: data[1].name},
+    {value: data[2].id, label: data[2].name}
   ]
 
   //NB: async-select only works with async load function
   const loadOptions = async (inputValue) => {
     if (!options) {
       const formatted = data.map(item => {
-        return {value: item, label: item}
+        return {value: item.id, label: item.name}
       })
       setoptions(formatted)
       return formatted.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
@@ -38,11 +38,11 @@ export default function AsyncSingleSelect(props) {
   }
 
   const showModalForm = (inputValue) => {
-    setValue(inputValue, valKey)
+    setValue({id: inputValue.value, name: inputValue.label}, valKey)
     setShowModal(true)
   }
   const handleChange = (inputValue) => {
-    setValue(inputValue?.value? inputValue.value : '', valKey)
+    setValue(inputValue?.value? {id: inputValue.value, name: inputValue.label} : '', valKey)
   }
 
 
@@ -53,7 +53,7 @@ export default function AsyncSingleSelect(props) {
         <p style={{fontSize: '12px'}}>(I'm an async select form field. Start typing and I'll find matchng options for you. If you can't find what you're looking for, I can also pop out a modal with a new form for you to create a new record.)</p>
         <AsyncCreatableSelect
           isClearable
-          value={value && {value: value, label: value}}
+          value={value && {value: value.id, label: value.name}}
           defaultOptions={defaultOptions}
           loadOptions={loadOptions}
           onChange={handleChange}
@@ -63,7 +63,7 @@ export default function AsyncSingleSelect(props) {
           isOpen={showModal}
           onBackgroundClick={() => setShowModal(false)}
           >
-          {/*this value prop is problemmatic for scaling...??*/}
+          {/*is this value prop problemmatic for scaling...??*/}
           <ModalForm value={value} />
         </StyledModal>}
       </div>

@@ -6,14 +6,14 @@ import _ from 'lodash'
 export default function MultiSelect(props) {
   const { value, setValue, valKey, data, text, subText } = props
   const formattedValue = _.isString(value)? '' : value.map(item => {
-    return {value: item, label: item}
+    return {value: item.id, label: item.name}
   })
   const formattedOptions = data.map(item => {
-    return {value: item, label: item}
+    return {value: item.id, label: item.name}
   })
 
   const handleChange = (inputValue) => {
-    setValue(inputValue? inputValue.map(item => item.value) : '', valKey)
+    setValue(inputValue? inputValue.map(item => {return {id: item.value, name: item.label}}) : '', valKey)
   }
 
   return (

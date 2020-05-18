@@ -17,12 +17,15 @@ export default function Data() {
     const loadPeople = async () => {
       const reqConfig = {
         method: 'GET',
-        url: 'http://localhost:8080/people/list',
+        url: 'http://localhost:8080/list/Summer2020Dev/LL_PEOPLE',
         responseType: 'json'
       }
       try {
         const result = await axios(reqConfig)
-        setPeopleList(result.data.people)
+        const llPeople = result.data.records.map(record => {
+          return {id: record.id, name: record.fields.LLPeopleName}
+        })
+        setPeopleList(llPeople)
       } catch (err) {
         alert(err)
       }
@@ -30,39 +33,47 @@ export default function Data() {
     loadPeople()
   }, [])
 
-  // useEffect(() => {
-  //   const loadResourceTypes = async () => {
-  //     const reqConfig = {
-  //       method: 'GET',
-  //       url: 'http://localhost:8080/tags/resourcetypes',
-  //       responseType: 'json'
-  //     }
-  //     try {
-  //       const result = await axios(reqConfig)
-  //       setToolsMedsList(result.data.types)
-  //     } catch (err) {
-  //       alert(err)
-  //     }
-  //   }
-  //   loadResourceTypes()
-  // }, [])
-  //
-  // useEffect(() => {
-  //   const loadToolsMeds = async () => {
-  //     const reqConfig = {
-  //       method: 'GET',
-  //       url: 'http://localhost:8080/toolsmeds/list',
-  //       responseType: 'json'
-  //     }
-  //     try {
-  //       const result = await axios(reqConfig)
-  //       setTypes(result.data.list)
-  //     } catch (err) {
-  //       alert(err)
-  //     }
-  //   }
-  //   loadToolsMeds()
-  // }, [])
+  useEffect(() => {
+    const loadResourceTypes = async () => {
+      const reqConfig = {
+        method: 'GET',
+        url: 'http://localhost:8080/tags/resourcetypes',
+        responseType: 'json'
+      }
+      try {
+        const result = await axios(reqConfig)
+        console.log(result)
+        const types = result.data.options.map(tag => {
+          return {id: tag, name: tag}
+        })
+        console.log(types)
+        setTypes(types)
+      } catch (err) {
+        alert(err)
+      }
+    }
+    loadResourceTypes()
+  }, [])
+
+  useEffect(() => {
+    const loadToolsMeds = async () => {
+      const reqConfig = {
+        method: 'GET',
+        url: 'http://localhost:8080/list/Summer2020Dev/TOOLS_AND_MEDIA',
+        responseType: 'json'
+      }
+      try {
+        const result = await axios(reqConfig)
+        const toolsMeds = result.data.records.map(record => {
+          return {id: record.id, name: record.fields["TOOL or MEDIA"]}
+        })
+        setToolsMedsList(toolsMeds)
+      } catch (err) {
+        alert(err)
+      }
+    }
+    loadToolsMeds()
+  }, [])
 
   return (
     <LLPeople.Provider value={peopleList}>

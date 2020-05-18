@@ -14,6 +14,9 @@ export default function App() {
         <Route exact path='/resource'>
           <ResourceForm />
         </Route>
+        <Route exact path='/update'>
+          <ResourceForm />
+        </Route>
       </Switch>
     </Router>
   )

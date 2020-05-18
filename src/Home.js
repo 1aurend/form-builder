@@ -8,7 +8,8 @@ export default function Home() {
       <h1>Form Builder!</h1>
       <h4>Select a sample form below to test</h4>
       <ul>
-        <li><Link to='/resource'>Resource Form</Link></li>
+        <li><Link to='/resource'>Resource Collector</Link></li>
+        <li><Link to='/update'>Update Resource</Link></li>
       </ul>
     </>
   )

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import axios from 'axios'
 import StrInput from './questions/StrInput'
 import AsyncSingleSelect from './questions/AsyncSingleSelect'
@@ -21,6 +21,7 @@ export default function ResourceForm() {
     link: ''
   })
   const [status, setStatus] = useState('open')
+  const id = useRef(null)
 
   const setValue = (e, key) => {
     switch (key) {
@@ -39,19 +40,34 @@ export default function ResourceForm() {
         method: 'POST',
         url: 'http://localhost:8080/resources/submit',
         responseType: 'json',
-        data: {...formValues, who: [formValues.who]}
+        data: {
+          ...formValues,
+          who: [formValues.who.id],
+          tool: formValues.tool.map(item => item.id),
+          type: formValues.type.map(item => item.name)
+        }
       }
       try {
         const result = await axios(reqConfig)
         console.log(`Success! Resource ${formValues.title} created`)
         console.log(result)
         //add resulting record to context here?
+        id.current = result.data.record.id
         setStatus('success')
       } catch (err) {
         alert(err)
       }
     }
     submitResource()
+  }
+
+  if (status === 'success') {
+    return(
+      <div style={{marginLeft: '5%', marginTop: '5%'}}>
+        <h1>Success!</h1>
+        <p>Resource {formValues.title} created with record ID {id.current}</p>
+      </div>
+    )
   }
 
   return (
