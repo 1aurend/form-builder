@@ -4,16 +4,16 @@ import axios from 'axios'
 
 export default function ToolMedRadio({ input, setShowModal }) {
   const [value, setValue] = useState(true)
-  console.log(value)
+  console.log(input)
 
   const createToolMed = async () => {
     const reqConfig = {
       method: 'POST',
-      url: 'http://localhost:8080/tools/create',
+      url: 'http://localhost:8080/toolsmeds/create',
       responseType: 'json',
       data: {
-        input: input,
-        type: value? 'tool' : 'medium',
+        input: input.name,
+        type: value? 'TOOL' : 'MEDIA',
       }
     }
     try {

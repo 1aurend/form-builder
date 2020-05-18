@@ -32,9 +32,9 @@ export default function AsyncSingleSelect(props) {
         return {value: item.id, label: item.name}
       })
       setoptions(formatted)
-      return formatted.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+      return formatted.filter(option => option.label?.toLowerCase().includes(inputValue.toLowerCase()))
     }
-    return options.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+    return options.filter(option => option.label?.toLowerCase().includes(inputValue.toLowerCase()))
   }
 
   const showModalForm = (inputValue) => {

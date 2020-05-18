@@ -35,13 +35,13 @@ export default function AsyncMultiSelect(props) {
         return {value: item.id, label: item.name}
       })
       setOptions(formatted)
-      return formatted.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+      return formatted.filter(option => option.label?.toLowerCase().includes(inputValue.toLowerCase()))
     }
-    return options.filter(option => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+    return options.filter(option => option.label?.toLowerCase().includes(inputValue.toLowerCase()))
   }
 
   const showModalSelector = (inputValue) => {
-    setValue([...value, {id: inputValue.value, name: inputValue.label}], valKey)
+    setValue([...value, {id: null, name: inputValue}], valKey)
     setShowModal(true)
   }
   const handleChange = (inputValue) => {
@@ -67,7 +67,7 @@ export default function AsyncMultiSelect(props) {
           isOpen={showModal}
           onBackgroundClick={() => setShowModal(false)}
           >
-          <ModalContent input={value} setShowModal={setShowModal}/>
+          <ModalContent input={value[value.length-1]} setShowModal={setShowModal}/>
         </StyledModal>}
       </div>
     </ModalProvider>
