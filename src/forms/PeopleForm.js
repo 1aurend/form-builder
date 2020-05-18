@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 
 
-export default function PeopleForm({ value }) {
+export default function PeopleForm({ value, createdId }) {
   const [formValues, setformValues] = useState({
     first: '',
     last: '',
@@ -25,6 +25,7 @@ export default function PeopleForm({ value }) {
     try {
       const result = await axios(reqConfig)
       console.log(result)
+      createdId.current = result.data.result[1].id
       //add resulting record to context here?
       setSuccess(true)
     } catch (err) {

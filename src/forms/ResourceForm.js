@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react'
+import React, { useState, useContext, useRef, useEffect } from 'react'
 import axios from 'axios'
 import StrInput from './questions/StrInput'
 import AsyncSingleSelect from './questions/AsyncSingleSelect'
@@ -21,7 +21,22 @@ export default function ResourceForm() {
     link: ''
   })
   const [status, setStatus] = useState('open')
-  const id = useRef(null)
+  const newResourceId = useRef(null)
+  const newPersonId = useRef(null)
+  const newToolMedId = useRef(null)
+
+  useEffect(() => {
+    if (newPersonId.current && newPersonId.current !== formValues.who.id ) {
+      setformValues({...formValues, who: {id: newPersonId.current, name: formValues.who.name} })
+    }
+  }, [newPersonId, formValues])
+  useEffect(() => {
+    if (newToolMedId.current && newToolMedId.current !== formValues.tool[formValues.tool.length-1].id ) {
+      const withId = {...formValues.tool[formValues.tool.length-1], id: newToolMedId.current}
+      const updatedTools = formValues.tool.pop().push(withId)
+      setformValues({...formValues, tool: updatedTools })
+    }
+  }, [newToolMedId, formValues])
 
   const setValue = (e, key) => {
     switch (key) {
@@ -52,7 +67,7 @@ export default function ResourceForm() {
         console.log(`Success! Resource ${formValues.title} created`)
         console.log(result)
         //add resulting record to context here?
-        id.current = result.data.record.id
+        newResourceId.current = result.data.record.id
         setStatus('success')
       } catch (err) {
         alert(err)
@@ -65,7 +80,7 @@ export default function ResourceForm() {
     return(
       <div style={{marginLeft: '5%', marginTop: '5%'}}>
         <h1>Success!</h1>
-        <p>Resource {formValues.title} created with record ID {id.current}</p>
+        <p>Resource {formValues.title} created with record ID {newResourceId.current}</p>
       </div>
     )
   }
@@ -78,6 +93,7 @@ export default function ResourceForm() {
         value={formValues.who}
         setValue={setValue}
         ModalForm={PeopleForm}
+        createdId={newPersonId}
         valKey='who'
         data={llPeople}
         text='Who are you?'
@@ -102,6 +118,7 @@ export default function ResourceForm() {
         data={toolsMeds}
         text='Tool or Medium'
         ModalContent={ToolMedCheckbox}
+        createdId={newToolMedId}
         />
       <StrInput
         title='Link to your resource'

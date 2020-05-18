@@ -15,7 +15,7 @@ const StyledModal = Modal.styled`
 `
 
 export default function AsyncMultiSelect(props) {
-  const { value, setValue, valKey, data, text, ModalContent } = props
+  const { value, setValue, valKey, data, text, ModalContent, createdId } = props
   const formattedValue = _.isString(value)? '' : value.map(item => {
     return {value: item.id, label: item.name}
   })
@@ -67,7 +67,7 @@ export default function AsyncMultiSelect(props) {
           isOpen={showModal}
           onBackgroundClick={() => setShowModal(false)}
           >
-          <ModalContent input={value[value.length-1]} setShowModal={setShowModal}/>
+          <ModalContent input={value[value.length-1]} setShowModal={setShowModal} createdId={createdId}/>
         </StyledModal>}
       </div>
     </ModalProvider>

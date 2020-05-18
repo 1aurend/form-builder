@@ -15,7 +15,7 @@ const StyledModal = Modal.styled`
 `
 
 export default function AsyncSingleSelect(props) {
-  const { value, setValue, valKey, data, text, ModalForm } = props
+  const { value, setValue, valKey, data, text, ModalForm, createdId } = props
   const [options, setoptions] = useState(null)
   const [showModal, setShowModal] = useState(false)
 
@@ -38,7 +38,8 @@ export default function AsyncSingleSelect(props) {
   }
 
   const showModalForm = (inputValue) => {
-    setValue({id: inputValue.value, name: inputValue.label}, valKey)
+    console.log(inputValue)
+    setValue({id: null, name: inputValue}, valKey)
     setShowModal(true)
   }
   const handleChange = (inputValue) => {
@@ -64,7 +65,7 @@ export default function AsyncSingleSelect(props) {
           onBackgroundClick={() => setShowModal(false)}
           >
           {/*is this value prop problemmatic for scaling...??*/}
-          <ModalForm value={value} />
+          <ModalForm value={value.name} createdId={createdId} />
         </StyledModal>}
       </div>
     </ModalProvider>
