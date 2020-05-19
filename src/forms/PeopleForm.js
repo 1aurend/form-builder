@@ -25,7 +25,7 @@ export default function PeopleForm({ value, createdId }) {
     try {
       const result = await axios(reqConfig)
       console.log(result)
-      createdId.current = result.data.result[1].id
+      createdId.current = result.data.result.id
       //add resulting record to context here?
       setSuccess(true)
     } catch (err) {
