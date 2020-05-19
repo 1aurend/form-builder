@@ -23,18 +23,24 @@ export default function ResourceForm() {
   const [status, setStatus] = useState('open')
   const newResourceId = useRef(null)
   const newPersonId = useRef(null)
-  const newToolMedId = useRef(null)
+  const [newToolMedId, setNewToolMedId] = useState(null)
 
   useEffect(() => {
-    if (newPersonId.current && newPersonId.current !== formValues.who.id ) {
+    if (newPersonId.current && !formValues.who.id ) {
       setformValues({...formValues, who: {id: newPersonId.current, name: formValues.who.name} })
+      newPersonId.current = null
     }
   }, [newPersonId, formValues])
   useEffect(() => {
-    if (newToolMedId.current && newToolMedId.current !== formValues.tool[formValues.tool.length-1].id ) {
-      const withId = {...formValues.tool[formValues.tool.length-1], id: newToolMedId.current}
-      const updatedTools = formValues.tool.pop().push(withId)
+    if (newToolMedId && !formValues.tool[formValues.tool.length-1].id ) {
+      console.log('here')
+      const withId = {...formValues.tool[formValues.tool.length-1], id: newToolMedId}
+      console.log(withId)
+      formValues.tool.pop()
+      const updatedTools = [...formValues.tool, withId]
+      console.log(updatedTools)
       setformValues({...formValues, tool: updatedTools })
+      setNewToolMedId(null)
     }
   }, [newToolMedId, formValues])
 
@@ -118,7 +124,7 @@ export default function ResourceForm() {
         data={toolsMeds}
         text='Tool or Medium'
         ModalContent={ToolMedCheckbox}
-        createdId={newToolMedId}
+        createdId={setNewToolMedId}
         />
       <StrInput
         title='Link to your resource'

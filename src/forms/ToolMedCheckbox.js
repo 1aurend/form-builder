@@ -19,7 +19,7 @@ export default function ToolMedRadio({ input, setShowModal, createdId }) {
     try {
       const result = await axios(reqConfig)
       console.log(result)
-      createdId.current = result.data.result[1].id
+      createdId(result.data.result[1].id)
       //add resulting record to context here?
       setShowModal(false)
     } catch (err) {
