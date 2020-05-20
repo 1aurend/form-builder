@@ -18,6 +18,7 @@ export default function AsyncSingleSelect(props) {
   const { value, setValue, valKey, data, text, ModalForm, createdId } = props
   const [options, setoptions] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  console.log(data)
 
   const defaultOptions = [
     {value: data[0].id, label: data[0].name},

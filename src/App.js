@@ -1,7 +1,8 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './Home'
-import ResourceForm from './forms/ResourceForm'
+import ResourceCollector from './forms/ResourceCollector'
+import UpdateResource from './forms/UpdateResource'
 
 
 export default function App() {
@@ -12,10 +13,10 @@ export default function App() {
           <Home />
         </Route>
         <Route exact path='/resource'>
-          <ResourceForm />
+          <ResourceCollector />
         </Route>
         <Route exact path='/update'>
-          <ResourceForm />
+          <UpdateResource />
         </Route>
       </Switch>
     </Router>

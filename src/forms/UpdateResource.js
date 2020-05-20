@@ -6,21 +6,23 @@ import AsyncMultiSelect from './questions/AsyncMultiSelect'
 import MultiSelect from './questions/MultiSelect'
 import PeopleForm from './PeopleForm'
 import ToolMedCheckbox from './ToolMedCheckbox'
-import { LLPeople, ToolsMeds, ResourceTypes } from '../Data'
+import { LLPeople, ToolsMeds, ResourceTypes, ResourceList } from '../Data'
 
 
-export default function ResourceForm() {
+export default function ResourceCollector() {
   const llPeople = useContext(LLPeople)
   const toolsMeds = useContext(ToolsMeds)
   const resourceTypes = useContext(ResourceTypes)
+  const resourceList = useContext(ResourceList)
   const [formValues, setformValues] = useState({
+    id: '',
     who: '',
     title: '',
     type: [],
     tool: [],
     link: ''
   })
-  const [status, setStatus] = useState('open')
+  const [status, setStatus] = useState('search')
   const newResourceId = useRef(null)
   const newPersonId = useRef(null)
   const [newToolMedId, setNewToolMedId] = useState(null)
@@ -33,12 +35,9 @@ export default function ResourceForm() {
   }, [newPersonId, formValues])
   useEffect(() => {
     if (newToolMedId && !formValues.tool[formValues.tool.length-1].id ) {
-      console.log('here')
       const withId = {...formValues.tool[formValues.tool.length-1], id: newToolMedId}
-      console.log(withId)
       formValues.tool.pop()
       const updatedTools = [...formValues.tool, withId]
-      console.log(updatedTools)
       setformValues({...formValues, tool: updatedTools })
       setNewToolMedId(null)
     }
@@ -55,23 +54,53 @@ export default function ResourceForm() {
     }
   }
 
+  const onSelectResource = async () => {
+    console.log(formValues.id.id)
+    const findResource = async () => {
+      const reqConfig = {
+        method: 'POST',
+        url: 'http://localhost:8080/resources/find',
+        responseType: 'json',
+        data: {
+          id: formValues.id.id
+        }
+      }
+      try {
+        const result = await axios(reqConfig)
+        const fields = result.data.record.fields
+        const inATVals = {
+          id: formValues.id,
+          who: fields.Creator,
+          title: fields.Title,
+          type: fields.Type.map(type => {return {id: type, name: type}}),
+          tool: fields["Tool or Medium"],
+          link: fields.Link
+        }
+        setformValues(inATVals)
+        setStatus('ready')
+      } catch (err) {
+        alert(err)
+      }
+    }
+    findResource()
+  }
+
   const onSubmit = async () => {
     const submitResource = async () => {
       const reqConfig = {
         method: 'POST',
-        url: 'http://localhost:8080/resources/submit',
+        url: 'http://localhost:8080/resources/update',
         responseType: 'json',
         data: {
           ...formValues,
           who: [formValues.who.id],
           tool: formValues.tool.map(item => item.id),
-          type: formValues.type.map(item => item.name)
+          type: formValues.type.map(item => item.name),
+          id: formValues.id.id
         }
       }
       try {
         const result = await axios(reqConfig)
-        console.log(`Success! Resource ${formValues.title} created`)
-        console.log(result)
         //add resulting record to context here?
         newResourceId.current = result.data.record.id
         setStatus('success')
@@ -86,14 +115,35 @@ export default function ResourceForm() {
     return(
       <div style={{marginLeft: '5%', marginTop: '5%'}}>
         <h1>Success!</h1>
-        <p>Resource {formValues.title} created with record ID {newResourceId.current}</p>
+        <p>Resource {formValues.title} with record ID {newResourceId.current} updated</p>
+      </div>
+    )
+  }
+  if (status === 'search') {
+    return (
+      <div style={{marginLeft: '5%', marginTop: '5%'}}>
+        <h1>Update Resource</h1>
+        <p>(I'm an un-styled prototype of a forking form.)</p>
+        <AsyncSingleSelect
+          value={formValues.id}
+          setValue={setValue}
+          valKey='id'
+          data={resourceList}
+          text='Which resource are you here to update?'
+          />
+        <button
+          onClick={onSelectResource}
+          style={{marginTop: '20px'}}
+          >
+          Go!
+        </button>
       </div>
     )
   }
 
   return (
     <div style={{marginLeft: '5%', marginTop: '5%'}}>
-      <h1>Resource Collector</h1>
+      <h1>Update Resource</h1>
       <p>(I'm an un-styled prototype of a forking form.)</p>
       <AsyncSingleSelect
         value={formValues.who}
