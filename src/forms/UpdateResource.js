@@ -9,7 +9,7 @@ import ToolMedCheckbox from './ToolMedCheckbox'
 import { LLPeople, ToolsMeds, ResourceTypes, ResourceList } from '../Data'
 
 
-export default function ResourceCollector() {
+export default function UpdateResource() {
   const llPeople = useContext(LLPeople)
   const toolsMeds = useContext(ToolsMeds)
   const resourceTypes = useContext(ResourceTypes)

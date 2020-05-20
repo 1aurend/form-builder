@@ -33,12 +33,9 @@ export default function ResourceCollector() {
   }, [newPersonId, formValues])
   useEffect(() => {
     if (newToolMedId && !formValues.tool[formValues.tool.length-1].id ) {
-      console.log('here')
       const withId = {...formValues.tool[formValues.tool.length-1], id: newToolMedId}
-      console.log(withId)
       formValues.tool.pop()
       const updatedTools = [...formValues.tool, withId]
-      console.log(updatedTools)
       setformValues({...formValues, tool: updatedTools })
       setNewToolMedId(null)
     }
